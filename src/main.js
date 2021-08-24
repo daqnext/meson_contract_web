@@ -1,6 +1,5 @@
 const { args, koaApp, koaRouter, logger, ROOTDIR } = require("./global.js");//all the global data and initialization
 const json = require("koa-json");
-const cors = require('@koa/cors');
 const koastatic = require("koa-static");
 const koabodyparser = require("koa-bodyparser");
 const fs = require("fs");
