@@ -1,0 +1,49 @@
+body nav{
+    z-index: 99;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    background-color: #121b24;
+    box-shadow: 2px 2px 2px #101010;
+}
+
+
+#menupage{
+z-index: 9999;
+left: 0;
+top: 0;
+position: absolute;
+background-color: #000000e3;
+width: 100%;
+height: 100%;
+}
+
+body nav .menu{
+    cursor: pointer;
+    color: #d8d8d8;
+    font-weight: bold;
+    font-size: 25px;
+}
+body nav .menu:hover{
+    text-decoration: underline;
+}
+
+.menuslide button:hover{
+cursor: pointer;
+background-color: #191919;
+}
+
+body section{
+max-width: 1000px;
+margin: 50px auto;
+padding: 50px 30px;
+min-height: 800px;
+}
+
+body .menuslide{
+max-width: 500px;
+margin: 100px auto;
+}
+ 
+ 

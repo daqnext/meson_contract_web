@@ -1,0 +1,54 @@
+<nav class="container-fluid">
+    <ul>
+        <li>
+            <a class="menu" id='menubtn'>
+                MENU
+            </a>
+        </li>
+    </ul>
+    <ul>
+
+    </ul>
+</nav>
+
+<div id="menupage"  style="display: none;">
+    <div class="menuslide" >
+        <button class="outline contrast" onclick="loadsec('index')" >index</button>
+        <button class="outline contrast" onclick="loadsec('erc20')" >erc20</button>
+        <button class="outline contrast" onclick="loadsec('dao')" >dao</button>
+        <button class="outline contrast" onclick="loadsec('mining')" >mining</button>
+    </div>
+</div>
+ 
+
+<script>
+     
+    function inimenu(){
+        let key=window.location.href.split('#')[1];
+        if(key==''){
+            key='index';
+        }
+        $("#section").load(key+"_sec.html");
+    }
+
+    function loadsec(sec){
+        let weburl=window.location.href.split('#')[0];
+        window.location.href=weburl+"#"+sec;
+        $("#section").load(sec+"_sec.html");
+    }
+
+    $(function(){
+        inimenu();
+    });
+
+    $( "#menubtn" ).click(function() {
+        $( "#menupage" ).toggle();
+    });
+
+    $("#menupage").click(function(){
+        $("#menupage").hide();
+    }); 
+
+
+
+  </script>
