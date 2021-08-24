@@ -1,0 +1,17 @@
+<article>
+    <blockquote>
+        "Ganache Dev Chain"
+    </blockquote>
+    <pre>
+        <pre id="ganacheinfo"></pre>
+    </pre>
+</article>
+
+<script>
+    var domain = "http://contract.meson.network:8080";
+    $(function () {
+        $.get(domain + "/deployinfo.json", function (result) {
+            $('#ganacheinfo').jsonViewer(result);
+        });
+    });
+</script>

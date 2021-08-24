@@ -1,8 +1,132 @@
-<article >
-    <blockquote>
-        "ERC20"
-    </blockquote>
-    <pre> 
-       
-    </pre>
+<article>
+  <blockquote>
+    "ERC20"
+  </blockquote>
+
+  <div>
+    <h6>input erc20 token address</h6>
+    <input type="text" id="erc20address" value="" />
+  </div>
+
+  <pre>
+    <h6>Simple call the metamask plugin</h6>
+    <button class="outline" onclick="requestAccount()" >Request Account</button>
+  </pre>
+
+
+  <pre>
+    <h6>Get my balance</h6>
+    <div id="balance_result"></div>
+    <button class="outline" onclick="getBalance()" > Get Balance</button>
+  </pre>
+
+  <pre>
+    <h6>Mint [onlyContractOwner]</h6>
+    <input id="mintvalue" placeholder="Input your mint value" />
+    <button class="outline" onclick="mint()" > Mint </button>
+  </pre>
+
+  <pre>
+    <h6>burn [you will lose money!] </h6>
+    <input id="burnvalue" placeholder="Input your burn value" />
+    <button class="outline" onclick="burn()" > Burn </button>
+  </pre>
+
+  <pre>
+    <h6>add_special [onlyContractOwner] </h6>
+    <input id="special_addr" type="text" placeholder="special_addr" />
+    <input id="special_id" type="number" placeholder="special_id" />
+    <button class="outline" onclick="add_special()" > add_special </button>
+  </pre>
+
+
 </article>
+
+
+
+
+
+<script src="/js/ethers-5.2.umd.min.js" type="application/javascript"></script>
+
+<script>
+
+  var abi;
+  $.get("/abi/MSN-abi.json", function (result) {
+    abi = result.abi;
+  });
+
+  async function requestAccount() {
+    try {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+    } catch (e) {
+      alertify.error(e.data.message);
+    }
+  }
+
+  async function getBalance() {
+    if (typeof window.ethereum !== 'undefined') {
+      const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract($('#erc20address').val(), abi, provider)
+      const balance = await contract.balanceOf(account);
+      $("#balance_result").html('Balance of :' + account + ':' + balance.toString());
+    } else {
+      await requestAccount();
+    }
+  }
+
+  async function mint() {
+    try {
+      if (typeof window.ethereum !== 'undefined') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
+        const transaction = await contract.mint($("#mintvalue").val());
+        await transaction.wait();
+      } else {
+        await requestAccount();
+      }
+    } catch (e) {
+      alertify.error(e.data.message);
+    }
+
+  }
+
+  async function burn() {
+    try {
+      if (typeof window.ethereum !== 'undefined') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
+        const transaction = await contract.burn($("#burnvalue").val());
+        await transaction.wait();
+      } else {
+        await requestAccount();
+      }
+    } catch (e) {
+      alertify.error(e.data.message);
+    }
+
+  }
+
+
+  async function add_special() {
+    try {
+      if (typeof window.ethereum !== 'undefined') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
+        const transaction = await contract.add_special($("#special_addr").val(),$("#special_id").val());
+        await transaction.wait();
+      } else {
+        await requestAccount();
+      }
+    } catch (e) {
+      alertify.error(e.data.message);
+    }
+
+  }
+ 
+
+
+</script>

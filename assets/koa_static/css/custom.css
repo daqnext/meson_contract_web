@@ -45,5 +45,11 @@ body .menuslide{
 max-width: 500px;
 margin: 100px auto;
 }
+
+.action{
+cursor: pointer;
+color: #0083d2;
+text-decoration: underline;
+}
  
  
