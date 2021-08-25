@@ -8,105 +8,132 @@
     <input type="text" id="erc20address" value="" />
   </div>
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>Simple call the metamask plugin</h6>
     <button class="outline" onclick="requestAccount()" >Request Account</button>
   </pre>
 
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>Decimals of this contract</h6>
     <div id="decimals_result"></div>
-    <button class="outline" onclick="decimals()">Decimals of contract</button>
+    <button class="outline" onclick="decimals()">Get Contract Decimals</button>
   </pre>
 
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>Name of this contract</h6>
     <div id="name_result"></div>
-    <button class="outline" onclick="getname()">Get Name of this contract</button>
+    <button class="outline" onclick="getname()">Get Contract Name</button>
   </pre>
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>Symbol of this contract</h6>
     <div id="symbol_result"></div>
-    <button class="outline" onclick="symbol()">Get Symbol of this contract</button>
+    <button class="outline" onclick="symbol()">Get Contract Symbol</button>
   </pre>
 
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>totalSupply of this contract</h6>
     <div id="totalSupply_result"></div>
     <div id="totalSupply_result_easyread"></div>
-    <button class="outline" onclick="totalSupply()">Get totalSupply of this contract</button>
+    <button class="outline" onclick="totalSupply()">Get Contract TotalSupply</button>
   </pre>
 
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>Get my balance</h6>
     <div id="balance_result_addr"></div>
     <div id="balance_result_amount"></div>
     <div id="balance_result_easyread"></div>
-    <button class="outline" onclick="getBalance()"> Get My Balance of this ERC20 token</button>
+    <button class="outline" onclick="getBalance()"> Get My Balance</button>
   </pre>
 
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>balanceOf</h6>
     <input id="balanceOf_addr" placeholder="Input address " />
     <div id="balanceOf_result"></div>
     <div id="balanceOf_result_easyread"></div>
-    <button class="outline" onclick="balanceOf()"> Get balance Of address</button>
+    <button class="outline" onclick="balanceOf()"> Get balance Of</button>
   </pre>
 
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>Mint [onlyContractOwner]</h6>
     <input id="mintvalue" placeholder="Input your mint value" />
     <div id="mintvalue_easyread"></div>
     <button class="outline" onclick="mint()" > Mint </button>
   </pre>
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>burn [you will lose money!] </h6>
     <input id="burnvalue" placeholder="Input your burn value" />
     <div id="burnvalue_easyread"></div>
     <button class="outline" onclick="burn()" > Burn </button>
   </pre>
 
-  <pre>
-    <h6>add_special [onlyContractOwner] </h6>
-    <input id="special_addr" type="text" placeholder="special_addr" />
-    <input id="special_id" type="number" placeholder="special_id" />
-    <button class="outline" onclick="add_special()" > add_special </button>
-  </pre>
 
-
-  <pre>
+  <pre class="lineheightsm" >
     <h6>get_special</h6>
     <input id="get_special_addr" placeholder="Input special_addr" />
     <div   id="get_special_result"></div>
     <button class="outline" onclick="get_special()" > get_special </button>
   </pre>
 
-  <pre>
+  <pre class="lineheightsm" >
+    <h6>add_special [onlyContractOwner] </h6>
+    <input id="special_addr" type="text" placeholder="special_addr" />
+    <input id="special_id" type="number" placeholder="special_id" />
+    <button class="outline" onclick="add_special()" > add_special </button>
+  </pre>
+
+  <pre class="lineheightsm" >
+    <h6>remove_special [onlyContractOwner] </h6>
+    <input id="remove_special_addr" type="text" placeholder="address to delete" />
+    <button class="outline" onclick="remove_special()" > remove_special </button>
+  </pre>
+
+
+  <pre class="lineheightsm" >
     <h6>get_special_by_id</h6>
     <input id="get_special_by_id" placeholder="Input special_id" />
     <div   id="get_special_by_id_result"></div>
     <button class="outline" onclick="get_special_by_id()" > get_special_by_id </button>
   </pre>
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>get exchange status</h6>
     <div id="get_exchange_open_result"></div>
     <button class="outline" onclick="get_exchange_open()" > Get Exchange Status</button>
   </pre>
 
-  <pre>
+  <pre class="lineheightsm" >
     <h6>Exchange Status : true / false</h6>
     <input id="set_exchange_open" type="text"/>
     <button class="outline" onclick="set_exchange_open()" > Set Exchange Status</button>
   </pre>
+
+
+  <pre class="lineheightsm" >
+    <h6>approve </h6>
+    <input id="approve_spender" type="text" placeholder="spender" />
+    <input id="approve_amount" type="number" placeholder="amount" />
+    <button class="outline" onclick="approve()" > approve </button>
+  </pre>
+
+
+  <pre class="lineheightsm" >
+    <h6>allowance</h6>
+    <input id="allowance_owner" type="text" placeholder="allowance_owner" />
+    <input id="allowance_spender" type="text" placeholder="allowance_spender" />
+    <div id="allowance_result"></div>
+    <button class="outline" onclick="allowance()" > allowance </button>
+  </pre>
+
+
+
     
 </article>
 
@@ -291,6 +318,42 @@
 
 
 
+  async function approve() {
+    try {
+      if (typeof window.ethereum !== 'undefined') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
+        const transaction = await contract.approve($("#approve_spender").val(), $("#approve_amount").val());
+        await transaction.wait();
+      } else {
+        await requestAccount();
+      }
+    } catch (e) {
+      showerror(e);
+    }
+  }
+
+
+  async function allowance() {
+    try {
+      if (typeof window.ethereum !== 'undefined') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
+        const allowance_r= await contract.allowance($("#allowance_owner").val(), $("#allowance_spender").val());
+        $('#allowance_result').html(allowance_r.toString());
+        //alert(allowance_r.toString());
+        await transaction.wait();
+      } else {
+        await requestAccount();
+      }
+    } catch (e) {
+      showerror(e);
+    }
+  }
+ 
+
   async function add_special() {
     try {
       if (typeof window.ethereum !== 'undefined') {
@@ -305,8 +368,25 @@
     } catch (e) {
       showerror(e);
     }
-
   }
+
+
+  async function remove_special() {
+    try {
+      if (typeof window.ethereum !== 'undefined') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
+        const transaction = await contract.remove_special($("#remove_special_addr").val());
+        await transaction.wait();
+      } else {
+        await requestAccount();
+      }
+    } catch (e) {
+      showerror(e);
+    }
+  }
+
 
 
   async function get_special() {

@@ -8,6 +8,13 @@ body nav{
     box-shadow: 2px 2px 2px #101010;
 }
 
+.lineheightsm{
+    line-height: 4px;
+}
+
+.lineheightsm div{
+    margin: 10px 0px;
+}
 
 #menupage{
 z-index: 9999;
@@ -35,7 +42,7 @@ background-color: #191919;
 }
 
 body section{
-max-width: 1000px;
+max-width: 1260px;
 margin: 50px auto;
 padding: 50px 30px;
 min-height: 800px;

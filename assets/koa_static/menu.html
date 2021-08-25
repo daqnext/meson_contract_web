@@ -13,7 +13,6 @@
 
 <div id="menupage"  style="display: none;">
     <div class="menuslide" >
-        <button class="outline contrast" onclick="loadsec('index')" >index</button>
         <button class="outline contrast" onclick="loadsec('ganache')" >ganache</button>
         <button class="outline contrast" onclick="loadsec('erc20')" >erc20</button>
         <button class="outline contrast" onclick="loadsec('dao')" >dao</button>
@@ -26,7 +25,7 @@
      
     function inimenu(){
         let key=window.location.href.split('#')[1];
-        if(key==''){
+        if(!key){
             key='index';
         }
         $("#section").load(key+"_sec.html");
