@@ -135,6 +135,16 @@
 
 
   <pre class="lineheightsm">
+    <h6>transfer</h6>
+    <input id="transfer_recipient" type="text" placeholder="recipient" />
+    <input id="transfer_amount" type="number" placeholder="amount" />
+    <div id="transfer_amount_easyread" ></div>
+    <button class="outline" onclick="transfer()" > transfer </button>
+  </pre>
+
+
+
+  <pre class="lineheightsm">
     <h6>withdraw_eth</h6>
     <button class="outline" onclick="withdraw_eth()" > withdraw_eth </button>
   </pre>
@@ -147,7 +157,7 @@
 
 
 <script src="/js/ethers-5.2.umd.min.js" type="application/javascript"></script>
-<script src="/js/easynum.js" type="application/javascript"></script>
+<script src="/js/utils.js" type="application/javascript"></script>
 
 <script>
 
@@ -347,7 +357,6 @@
   });
 
 
-
   async function allowance() {
     try {
       if (typeof window.ethereum !== 'undefined') {
@@ -484,6 +493,27 @@
       showerror(e);
     }
   }
+
+
+  async function transfer() {
+    try {
+      if (typeof window.ethereum !== 'undefined') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
+        const transaction = await contract.transfer($('#transfer_recipient').val(),$('#transfer_amount').val());
+        await transaction.wait();
+      } else {
+        await requestAccount();
+      }
+    } catch (e) {
+      showerror(e);
+    }
+  }
+
+  $('#transfer_amount').keyup(function () {
+    $('#transfer_amount_easyread').html("amout:" + easyread($('#transfer_amount').val()).output);
+  });
 
 
 

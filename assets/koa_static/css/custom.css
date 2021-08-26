@@ -12,8 +12,10 @@ body nav{
     line-height: 4px;
 }
 
-.lineheightsm div{
-    margin: 10px 0px;
+.lineheightsm div {
+    display: block;
+    line-height: initial;
+    margin: 5px 0px;
 }
 
 #menupage{

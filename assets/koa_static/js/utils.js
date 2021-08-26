@@ -20,3 +20,14 @@ function easyread(fullnumber_txt_){
     }
     return result;
 }
+
+
+function multiTime(unix_timestamp_secs){
+  const data=new Date(unix_timestamp_secs * 1000);
+  result=[];
+  result.push('Europe/London:[Month/Day/Year] '+data.toLocaleString('en-US', {  timeZone: 'Europe/London' }));
+  result.push('America/New_York:[Month/Day/Year] '+data.toLocaleString('en-US', {  timeZone: 'America/New_York' }));
+  result.push('Asia/Shanghai:[Month/Day/Year] '+data.toLocaleString('en-US', {  timeZone: 'Asia/Shanghai' }));
+
+  return result;
+}
