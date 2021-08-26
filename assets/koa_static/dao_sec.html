@@ -1,8 +1,351 @@
-<article >
+<article>
     <blockquote>
-        "DAO"
+        "MSN-DAO"
     </blockquote>
-    <pre> 
-       
+
+    <div>
+        <h6>input MSN-DAO token address</h6>
+        <input type="text" id="daoaddress" value="" />
+    </div>
+
+    <pre class="lineheightsm">
+        <h6>Simple call the metamask plugin</h6>
+        <button class="outline" onclick="requestAccount()" >Request Account</button>
+      </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>get DAOOwner</h6>
+        <div id="get_DAOOwner_result"></div>
+        <button class="outline" onclick="get_DAOOwner()" >get DAOOwner</button>
     </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>change DAOOwner</h6>
+        <input id="change_DAOOwner_addr"/>
+        <button class="outline" onclick="change_DAOOwner()" >change DAOOwner</button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>get my deposit</h6>
+        <div id="get_deposit_result"></div>
+        <button class="outline" onclick="get_deposit()" >get my deposit</button>
+    </pre>
+
+    <pre class="lineheightsm">
+        <h6>get your deposit_lasttime</h6>
+        <div id="get_deposit_lasttime_result"></div>
+        <button class="outline" onclick="get_deposit_lasttime()" >get your d_lasttime</button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>transfer all my allowance to this contract</h6>
+        <button class="outline" onclick="deposit_all()" >deposit_all</button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>get keeper</h6>
+        <div id="get_keeper_result"></div>
+        <input id="get_keeper_addr" placeholder="input keeper address" />
+        <button class="outline" onclick="get_keeper()" >get keeper </button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>add keeper</h6>
+        <input id="add_keeper_addr" placeholder="input keeper address" />
+        <input id="add_keeper_name" placeholder="input keeper name" />
+        <button class="outline" onclick="add_keeper()" >add keeper</button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>remove keeper</h6>
+        <input id="remove_keeper_addr" placeholder="input keeper address" />
+        <button class="outline" onclick="remove_keeper()" >remove keeper</button>
+    </pre>
+
+
+
+
+    <pre class="lineheightsm">
+        <h6>get_ProposalFolderUrl</h6>
+        <div id="get_ProposalFolderUrl_result"></div>
+        <button class="outline" onclick="get_ProposalFolderUrl()" >get_ProposalFolderUrl</button>
+    </pre>
+
+
+
+    <pre class="lineheightsm">
+        <h6>set ProposalFolderUrl</h6>
+        <input id="set_ProposalFolderUrl_url"/>
+        <button class="outline" onclick="set_ProposalFolderUrl()" >set ProposalFolderUrl</button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>add_proposal</h6>
+        <input id="add_proposal_pid" placeholder="pid" />
+        <input id="add_proposal_startTime"  placeholder="startTime" />
+        <input id="add_proposal_endTime" placeholder="endTime"  />
+        <button class="outline" onclick="add_proposal()" >add_proposal</button>
+    </pre>
+
+    <pre class="lineheightsm">
+        <h6>remove_proposal</h6>
+        <input id="remove_proposal_pid"  placeholder="pid" />
+        <button class="outline" onclick="remove_proposal()" >remove_proposal</button>
+    </pre>
+    
+
+
 </article>
+
+
+<script src="/js/ethers-5.2.umd.min.js" type="application/javascript"></script>
+<script src="/js/easynum.js" type="application/javascript"></script>
+
+
+
+<script>
+
+    function showerror(e) {
+        if (e.hasOwnProperty('data') && e.data.hasOwnProperty('message')) {
+            alertify.error(e.data.message);
+        } else {
+            console.log(e);
+            alertify.error("something wrong");
+        }
+    }
+
+    var abi;
+    $.get("/abi/DAO-abi.json", function (result) {
+        abi = result.abi;
+    });
+
+
+    async function requestAccount() {
+        try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+    async function get_DAOOwner() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, provider)
+                const DAOOwner_result = await contract.get_DAOOwner();
+                $("#get_DAOOwner_result").html(DAOOwner_result.toString());
+
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+
+    async function change_DAOOwner() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.change_DAOOwner($('#change_DAOOwner_addr').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function get_deposit() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, provider)
+                const get_deposit_result = await contract.get_deposit();
+                $("#get_deposit_result").html(get_deposit_result.toString());
+
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+    async function get_deposit_lasttime() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, provider)
+                const get_deposit_lasttime_result = await contract.get_deposit_lasttime();
+                $("#get_deposit_lasttime_result").html(get_deposit_lasttime_result.toString());
+
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+
+    async function deposit_all() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.deposit_all();
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+
+    async function get_keeper() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, provider)
+                const get_keeper_result = await contract.get_keeper($('#get_keeper_addr').val());
+                $("#get_keeper_result").html(get_keeper_result.toString());
+
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function add_keeper() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.add_keeper($('#add_keeper_addr').val(), $('#add_keeper_name').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function remove_keeper() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.remove_keeper($('#remove_keeper_addr').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+
+    async function get_ProposalFolderUrl() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, provider)
+                const get_ProposalFolderUrl = await contract.get_ProposalFolderUrl();
+                $("#get_ProposalFolderUrl_result").html(get_ProposalFolderUrl.toString());
+
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function set_ProposalFolderUrl() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.set_ProposalFolderUrl($('#set_ProposalFolderUrl_url').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+    async function add_proposal() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.add_proposal($('#add_proposal_pid').val(),$('#add_proposal_startTime').val(),$('#add_proposal_endTime').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+    async function remove_proposal() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.remove_proposal($('#remove_proposal_pid').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+
+
+</script>
