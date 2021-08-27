@@ -1,5 +1,5 @@
 {
-    "abi":  [
+    "abi": [
         {
             "inputs": [
                 {
@@ -40,37 +40,6 @@
             "inputs": [
                 {
                     "indexed": false,
-                    "internalType": "uint16",
-                    "name": "_pid",
-                    "type": "uint16"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "address",
-                    "name": "_creator",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "_startTime",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "_endTime",
-                    "type": "uint256"
-                }
-            ],
-            "name": "add_proposal_EVENT",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
                     "internalType": "address",
                     "name": "oldOwner",
                     "type": "address"
@@ -83,6 +52,25 @@
                 }
             ],
             "name": "change_DAOOwner_EVENT",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "_from",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "deposit_all_EVENT",
             "type": "event"
         },
         {
@@ -128,18 +116,30 @@
             "inputs": [
                 {
                     "indexed": false,
+                    "internalType": "uint16",
+                    "name": "_pid",
+                    "type": "uint16"
+                },
+                {
+                    "indexed": false,
                     "internalType": "address",
-                    "name": "_from",
+                    "name": "_creator",
                     "type": "address"
                 },
                 {
                     "indexed": false,
                     "internalType": "uint256",
-                    "name": "amount",
+                    "name": "_startTime",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "_endTime",
                     "type": "uint256"
                 }
             ],
-            "name": "stack_all_EVENT",
+            "name": "set_proposal_EVENT",
             "type": "event"
         },
         {
@@ -254,35 +254,19 @@
         {
             "inputs": [
                 {
-                    "internalType": "uint16",
-                    "name": "_pid",
-                    "type": "uint16"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_startTime",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_endTime",
-                    "type": "uint256"
-                }
-            ],
-            "name": "add_proposal",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
                     "internalType": "address",
                     "name": "_newOwner",
                     "type": "address"
                 }
             ],
             "name": "change_DAOOwner",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "deposit_all",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -316,6 +300,44 @@
         {
             "inputs": [],
             "name": "get_blocktime",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                }
+            ],
+            "name": "get_deposit",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                }
+            ],
+            "name": "get_deposit_lasttime",
             "outputs": [
                 {
                     "internalType": "uint256",
@@ -405,32 +427,6 @@
         },
         {
             "inputs": [],
-            "name": "get_stack",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "get_stack_lasttime",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
             "name": "get_voter_hold_secs",
             "outputs": [
                 {
@@ -484,19 +480,35 @@
         {
             "inputs": [
                 {
+                    "internalType": "uint16",
+                    "name": "_pid",
+                    "type": "uint16"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_startTime",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_endTime",
+                    "type": "uint256"
+                }
+            ],
+            "name": "set_proposal",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
                     "internalType": "uint256",
                     "name": "secs",
                     "type": "uint256"
                 }
             ],
             "name": "set_voter_hold_secs",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "stack_all",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"

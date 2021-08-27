@@ -29,29 +29,28 @@
 
 
     <pre class="lineheightsm">
-        <h6>get my stack</h6>
-        <div id="get_stack_result"></div>
-        <button class="outline" onclick="get_stack()" >get my stack</button>
+        <h6>get my deposit</h6>
+        <div id="get_deposit_result"></div>
+        <button class="outline" onclick="get_deposit()" >get my deposit</button>
     </pre>
 
+  
     <pre class="lineheightsm">
-        <h6>get your stack_lasttime</h6>
-        <div id="get_stack_lasttime_result"></div>
-        <button class="outline" onclick="get_stack_lasttime()" >get your s_lasttime</button>
+        <h6>get your deposit_lasttime</h6>
+        <div id="get_deposit_lasttime_result"></div>
+        <button class="outline" onclick="get_deposit_lasttime()" >get_deposit_lasttime</button>
     </pre>
 
 
     <pre class="lineheightsm">
-        <h6>stack_all [transfer all my allowance to this contract]</h6>
-        <button class="outline" onclick="stack_all()" >stack_all</button>
+        <h6>deposit_all [transfer all my allowance to this contract]</h6>
+        <button class="outline" onclick="deposit_all()" >deposit_all</button>
     </pre>
 
     <pre class="lineheightsm">
         <h6>voter_withdraw_all [withdraw all my deposite from this contract]</h6>
         <button class="outline" onclick="voter_withdraw_all()" >voter_withdraw_all</button>
     </pre>
-
-    
 
 
     <pre class="lineheightsm">
@@ -119,13 +118,13 @@
 
 
     <pre class="lineheightsm">
-        <h6>add_proposal</h6>
-        <input id="add_proposal_pid" placeholder="pid" />
-        <input id="add_proposal_startTime" type="number" placeholder="startTime" />
-        <div   id="add_proposal_startTime_easyread" ></div>
-        <input id="add_proposal_endTime"  type="number" placeholder="endTime"  />
-        <div   id="add_proposal_endTime_easyread" ></div>
-        <button class="outline" onclick="add_proposal()" >add_proposal</button>
+        <h6>set_proposal</h6>
+        <input id="set_proposal_pid" placeholder="pid" />
+        <input id="set_proposal_startTime" type="number" placeholder="startTime" />
+        <div   id="set_proposal_startTime_easyread" ></div>
+        <input id="set_proposal_endTime"  type="number" placeholder="endTime"  />
+        <div   id="set_proposal_endTime_easyread" ></div>
+        <button class="outline" onclick="set_proposal()" >set_proposal</button>
     </pre>
 
     <pre class="lineheightsm">
@@ -204,15 +203,31 @@
         }
     }
 
+    async function set_deposit() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.set_deposit($('#set_deposit_input').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
 
-    async function get_stack() {
+     
+    async function get_deposit() {
         try {
             if (typeof window.ethereum !== 'undefined') {
                 const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, provider)
-                const get_stack_result = await contract.get_stack();
-                $("#get_stack_result").html(get_stack_result.toString());
+                const get_deposit_result = await contract.get_deposit(account);
+                $("#get_deposit_result").html(get_deposit_result.toString());
 
             } else {
                 await requestAccount();
@@ -223,14 +238,14 @@
     }
 
     
-    async function get_stack_lasttime() {
+    async function get_deposit_lasttime() {
         try {
             if (typeof window.ethereum !== 'undefined') {
                 const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, provider)
-                const get_stack_lasttime_result = await contract.get_stack_lasttime();
-                $("#get_stack_lasttime_result").html(get_stack_lasttime_result.toString());
+                const get_deposit_lasttime_result = await contract.get_deposit_lasttime(account);
+                $("#get_deposit_lasttime_result").html(get_deposit_lasttime_result.toString());
 
             } else {
                 await requestAccount();
@@ -242,13 +257,13 @@
 
 
 
-    async function stack_all() {
+    async function deposit_all() {
         try {
             if (typeof window.ethereum !== 'undefined') {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
-                const transaction = await contract.stack_all();
+                const transaction = await contract.deposit_all();
                 await transaction.wait();
             } else {
                 await requestAccount();
@@ -429,13 +444,13 @@
 
  
 
-    async function add_proposal() {
+    async function set_proposal() {
         try {
             if (typeof window.ethereum !== 'undefined') {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
-                const transaction = await contract.add_proposal($('#add_proposal_pid').val(),$('#add_proposal_startTime').val(),$('#add_proposal_endTime').val());
+                const transaction = await contract.set_proposal($('#set_proposal_pid').val(),$('#set_proposal_startTime').val(),$('#set_proposal_endTime').val());
                 await transaction.wait();
             } else {
                 await requestAccount();
@@ -446,17 +461,17 @@
     }
 
 
-    $('#add_proposal_startTime').keyup(function () {
-        $('#add_proposal_startTime_easyread').html('');
-        multiTime($('#add_proposal_startTime').val()).forEach(element => {
-            $("#add_proposal_startTime_easyread").append($('<div>'+element+'</div>'));
+    $('#set_proposal_startTime').keyup(function () {
+        $('#set_proposal_startTime_easyread').html('');
+        multiTime($('#set_proposal_startTime').val()).forEach(element => {
+            $("#set_proposal_startTime_easyread").append($('<div>'+element+'</div>'));
         });
     });
 
-    $('#add_proposal_endTime').keyup(function () {
-        $('#add_proposal_endTime_easyread').html('');
-        multiTime($('#add_proposal_endTime').val()).forEach(element => {
-            $("#add_proposal_endTime_easyread").append($('<div>'+element+'</div>'));
+    $('#set_proposal_endTime').keyup(function () {
+        $('#set_proposal_endTime_easyread').html('');
+        multiTime($('#set_proposal_endTime').val()).forEach(element => {
+            $("#set_proposal_endTime_easyread").append($('<div>'+element+'</div>'));
         });
     });
 
