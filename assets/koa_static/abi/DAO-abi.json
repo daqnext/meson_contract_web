@@ -1,5 +1,5 @@
 {
-    "abi": [
+    "abi":  [
         {
             "inputs": [
                 {
@@ -91,25 +91,6 @@
                 {
                     "indexed": false,
                     "internalType": "address",
-                    "name": "_from",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "deposit_all_EVENT",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "address",
                     "name": "keeper_addr",
                     "type": "address"
                 },
@@ -140,6 +121,25 @@
                 }
             ],
             "name": "remove_proposal_EVENT",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "_from",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "stack_all_EVENT",
             "type": "event"
         },
         {
@@ -289,13 +289,6 @@
         },
         {
             "inputs": [],
-            "name": "deposit_all",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
             "name": "get_DAOOwner",
             "outputs": [
                 {
@@ -323,32 +316,6 @@
         {
             "inputs": [],
             "name": "get_blocktime",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "get_deposit",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "get_deposit_lasttime",
             "outputs": [
                 {
                     "internalType": "uint256",
@@ -438,6 +405,32 @@
         },
         {
             "inputs": [],
+            "name": "get_stack",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "get_stack_lasttime",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "get_voter_hold_secs",
             "outputs": [
                 {
@@ -497,6 +490,13 @@
                 }
             ],
             "name": "set_voter_hold_secs",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "stack_all",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
