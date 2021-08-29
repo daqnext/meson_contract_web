@@ -1,7 +1,7 @@
 {
     "apps": [
                     {
-                            "name": "ss-template",
+                            "name": "meson contract web",
                             "script": "./src/main.js",
                             "cwd": "",
                             "env": {

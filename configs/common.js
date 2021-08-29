@@ -22,7 +22,7 @@ var common = {
   redis_family:4,
 
   //cache
-  cache_prefix:'temp_prod_'
+  cache_prefix:'msn_contract_web_'
  
 };
 
