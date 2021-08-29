@@ -1,8 +1,254 @@
-<article >
+<article>
     <blockquote>
         "Mining"
     </blockquote>
-    <pre> 
-       
+
+    <div>
+        <h6>input MSN-MINING token address</h6>
+        <input type="text" id="miningaddress" value="" />
+    </div>
+
+    <pre class="lineheightsm">
+        <h6>Simple call the metamask plugin</h6>
+        <button class="outline" onclick="requestAccount()" >Request Account</button>
     </pre>
+
+    <pre class="lineheightsm">
+        <h6>get MININGOwner</h6>
+        <div id="get_MiningOwner_result"></div>
+        <button class="outline" onclick="get_MiningOwner()" > get_MiningOwner</button>
+    </pre>
+
+    <pre class="lineheightsm">
+        <h6> set MiningOwner</h6>
+        <input id="set_MiningOwner_input" placeholder="set_MiningOwner_input"/>
+        <button class="outline" onclick="set_MiningOwner()" > set_MiningOwner</button>
+    </pre>
+
+
+
+    <pre class="lineheightsm">
+        <h6>get related msn address</h6>
+        <div id="get_msn_addr_result"></div>
+        <button class="outline" onclick="get_msn_addr()" > get_msn_addr</button>
+    </pre>
+
+   
+ 
+    <pre class="lineheightsm">
+        <h6>get keeper</h6>
+        <div id="get_keeper_result"></div>
+        <input id="get_keeper_addr" placeholder="input keeper address" />
+        <button class="outline" onclick="get_keeper()" >get keeper </button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>add keeper</h6>
+        <input id="add_keeper_addr" placeholder="input keeper address" />
+        <input id="add_keeper_name" placeholder="input keeper name" />
+        <button class="outline" onclick="add_keeper()" >add keeper</button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>remove keeper</h6>
+        <input id="remove_keeper_addr" placeholder="input keeper address" />
+        <button class="outline" onclick="remove_keeper()" >remove keeper</button>
+    </pre>
+
+    <pre class="lineheightsm">
+        <h6> get merkleroot's balance</h6>
+        <input id="get_merkle_balance_input" placeholder="input your merkle_root"/>
+        <div id="get_merkle_balance_result"></div>
+        <button class="outline" onclick="get_merkle_balance()" > get_merkle_balance</button>
+    </pre>
+
+    <pre class="lineheightsm">
+        <h6>add_merkle_root</h6>
+        <input id="add_merkle_root_merkleRoot" placeholder="merkleRoot"/>
+        <input id="add_merkle_root_amount" placeholder="amount"/>
+        <button class="outline" onclick="add_merkle_root()" > add_merkle_root</button>
+    </pre>
+
+     
+
 </article>
+
+<script src="/js/ethers-5.2.umd.min.js" type="application/javascript"></script>
+<script src="/js/utils.js" type="application/javascript"></script>
+
+
+
+<script>
+
+    function showerror(e) {
+        if (e.hasOwnProperty('data') && e.data.hasOwnProperty('message')) {
+            alertify.error(e.data.message);
+        } else {
+            console.log(e);
+            alertify.error("something wrong");
+        }
+    }
+
+    var abi;
+    $.get("/abi/MINING-abi.json", function (result) {
+        abi = result.abi;
+    });
+
+
+    async function requestAccount() {
+        try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+    async function get_MiningOwner() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = new ethers.Contract($('#miningaddress').val(), abi, provider)
+                const MiningOwner_result = await contract.get_MiningOwner();
+                $("#get_MiningOwner_result").html(MiningOwner_result.toString());
+
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+    async function get_msn_addr() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = new ethers.Contract($('#miningaddress').val(), abi, provider)
+                const get_msn_addr_result = await contract.get_msn_addr();
+                $("#get_msn_addr_result").html(get_msn_addr_result.toString());
+
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+     
+ 
+
+    async function get_merkle_balance() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
+                const get_merkle_balance_result = await contract.get_merkle_balance(
+                    ethers.utils.formatBytes32String($('#get_merkle_balance_input').val()));
+                $("#get_merkle_balance_result").html(get_merkle_balance_result.toString());
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+    async function add_merkle_root() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
+                const transaction = await contract.add_merkle_root(
+                    ethers.utils.formatBytes32String($('#add_merkle_root_merkleRoot').val()), 
+                $('#add_merkle_root_amount').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+    
+
+
+    async function set_MiningOwner() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
+                const set_MiningOwner_result = await contract.set_MiningOwner($('#set_MiningOwner_input').val());
+                $("#set_MiningOwner_result").html(set_MiningOwner_result.toString());
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+
+
+    async function get_keeper() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = new ethers.Contract($('#miningaddress').val(), abi, provider)
+                const get_keeper_result = await contract.get_keeper($('#get_keeper_addr').val());
+                $("#get_keeper_result").html(get_keeper_result.toString());
+
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function add_keeper() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
+                const transaction = await contract.add_keeper($('#add_keeper_addr').val(), $('#add_keeper_name').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function remove_keeper() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
+                const transaction = await contract.remove_keeper($('#remove_keeper_addr').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+</script>

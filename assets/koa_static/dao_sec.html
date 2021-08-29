@@ -34,7 +34,7 @@
         <button class="outline" onclick="get_deposit()" >get my deposit</button>
     </pre>
 
-  
+
     <pre class="lineheightsm">
         <h6>get your deposit_lasttime</h6>
         <div id="get_deposit_lasttime_result"></div>
@@ -101,7 +101,7 @@
     </pre>
 
 
-     
+
 
     <pre class="lineheightsm">
         <h6>get_proposal</h6>
@@ -132,8 +132,34 @@
         <input id="remove_proposal_pid"  placeholder="pid" />
         <button class="outline" onclick="remove_proposal()" >remove_proposal</button>
     </pre>
-    
 
+
+
+    <pre class="lineheightsm">
+        <h6>get_voter_hold_secs</h6>
+        <div id="get_voter_hold_secs_result"></div>
+        <button class="outline" onclick="get_voter_hold_secs()" >get_voter_hold_secs</button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>set_voter_hold_secs</h6>
+        <input id='set_voter_hold_secs_input' />
+        <button class="outline" onclick="set_voter_hold_secs()" >set_voter_hold_secs</button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>withdraw_contract</h6>
+        <button class="outline" onclick="withdraw_contract()" > withdraw_contract </button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>withdraw_eth</h6>
+        <button class="outline" onclick="withdraw_eth()" > withdraw_eth </button>
+    </pre>
+ 
 
 </article>
 
@@ -219,7 +245,7 @@
         }
     }
 
-     
+
     async function get_deposit() {
         try {
             if (typeof window.ethereum !== 'undefined') {
@@ -237,7 +263,7 @@
         }
     }
 
-    
+
     async function get_deposit_lasttime() {
         try {
             if (typeof window.ethereum !== 'undefined') {
@@ -378,7 +404,7 @@
     }
 
 
-     
+
 
     async function get_blocktime() {
         try {
@@ -387,12 +413,12 @@
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, provider)
                 const get_blocktime_result = await contract.get_blocktime();
-                $("#get_blocktime_result").html('unix-timestamp:'+get_blocktime_result.toString());
+                $("#get_blocktime_result").html('unix-timestamp:' + get_blocktime_result.toString());
                 $("#get_blocktime_result_easyread").html('');
                 multiTime(get_blocktime_result.toString()).forEach(element => {
-                    $("#get_blocktime_result_easyread").append($('<div>'+element+'</div>'));
+                    $("#get_blocktime_result_easyread").append($('<div>' + element + '</div>'));
                 });
-                
+
 
             } else {
                 await requestAccount();
@@ -421,17 +447,17 @@
                 const get_proposal_result = await contract.get_proposal($('#get_proposal_pid').val());
 
 
-                $('#get_proposal_result_pid').html("pid:"+get_proposal_result[0]);
-                $('#get_proposal_result_creator').html("creator:"+get_proposal_result[1]);
+                $('#get_proposal_result_pid').html("pid:" + get_proposal_result[0]);
+                $('#get_proposal_result_creator').html("creator:" + get_proposal_result[1]);
 
-                $('#get_proposal_result_startTime').html("startTime-UnixTimestamp:"+get_proposal_result[2].toString());     
+                $('#get_proposal_result_startTime').html("startTime-UnixTimestamp:" + get_proposal_result[2].toString());
                 multiTime(get_proposal_result[2].toString()).forEach(element => {
-                    $("#get_proposal_result_startTime_easyread").append($('<div>'+element+'</div>'));
+                    $("#get_proposal_result_startTime_easyread").append($('<div>' + element + '</div>'));
                 });
 
-                $('#get_proposal_result_endTime').html("endTime-UnixTimestamp:"+get_proposal_result[3].toString());     
+                $('#get_proposal_result_endTime').html("endTime-UnixTimestamp:" + get_proposal_result[3].toString());
                 multiTime(get_proposal_result[3].toString()).forEach(element => {
-                    $("#get_proposal_result_endTime_easyread").append($('<div>'+element+'</div>'));
+                    $("#get_proposal_result_endTime_easyread").append($('<div>' + element + '</div>'));
                 });
 
             } else {
@@ -442,7 +468,7 @@
         }
     }
 
- 
+
 
     async function set_proposal() {
         try {
@@ -450,7 +476,7 @@
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
-                const transaction = await contract.set_proposal($('#set_proposal_pid').val(),$('#set_proposal_startTime').val(),$('#set_proposal_endTime').val());
+                const transaction = await contract.set_proposal($('#set_proposal_pid').val(), $('#set_proposal_startTime').val(), $('#set_proposal_endTime').val());
                 await transaction.wait();
             } else {
                 await requestAccount();
@@ -464,14 +490,14 @@
     $('#set_proposal_startTime').keyup(function () {
         $('#set_proposal_startTime_easyread').html('');
         multiTime($('#set_proposal_startTime').val()).forEach(element => {
-            $("#set_proposal_startTime_easyread").append($('<div>'+element+'</div>'));
+            $("#set_proposal_startTime_easyread").append($('<div>' + element + '</div>'));
         });
     });
 
     $('#set_proposal_endTime').keyup(function () {
         $('#set_proposal_endTime_easyread').html('');
         multiTime($('#set_proposal_endTime').val()).forEach(element => {
-            $("#set_proposal_endTime_easyread").append($('<div>'+element+'</div>'));
+            $("#set_proposal_endTime_easyread").append($('<div>' + element + '</div>'));
         });
     });
 
@@ -495,6 +521,73 @@
     }
 
 
+
+    async function get_voter_hold_secs() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, provider)
+                const get_voter_hold_secs_result = await contract.get_voter_hold_secs();
+                $("#get_voter_hold_secs_result").html('hold seconds:' + get_voter_hold_secs_result.toString());
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function set_voter_hold_secs() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.set_voter_hold_secs($('#set_voter_hold_secs_input').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function withdraw_contract() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.withdraw_contract();
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function withdraw_eth() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.withdraw_eth();
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
 
 
 </script>
