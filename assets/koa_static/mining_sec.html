@@ -65,10 +65,10 @@
     </pre>
 
     <pre class="lineheightsm">
-        <h6>add_merkle_root</h6>
-        <input id="add_merkle_root_merkleRoot" placeholder="merkleRoot"/>
-        <input id="add_merkle_root_amount" placeholder="amount"/>
-        <button class="outline" onclick="add_merkle_root()" > add_merkle_root</button>
+        <h6>set_merkle_root</h6>
+        <input id="set_merkle_root_merkleRoot"   type="text"  placeholder="merkleRoot"/>
+        <input id="set_merkle_root_amount" type="number" placeholder="amount"/>
+        <button class="outline" onclick="set_merkle_root()" > set_merkle_root</button>
     </pre>
 
      
@@ -149,8 +149,7 @@
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
-                const get_merkle_balance_result = await contract.get_merkle_balance(
-                    ethers.utils.formatBytes32String($('#get_merkle_balance_input').val()));
+                const get_merkle_balance_result = await contract.get_merkle_balance($('#get_merkle_balance_input').val());
                 $("#get_merkle_balance_result").html(get_merkle_balance_result.toString());
             } else {
                 await requestAccount();
@@ -160,15 +159,14 @@
         }
     }
 
-    async function add_merkle_root() {
+    async function set_merkle_root() {
         try {
             if (typeof window.ethereum !== 'undefined') {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
-                const transaction = await contract.add_merkle_root(
-                    ethers.utils.formatBytes32String($('#add_merkle_root_merkleRoot').val()), 
-                $('#add_merkle_root_amount').val());
+                const transaction = await contract.set_merkle_root(
+                    $('#set_merkle_root_merkleRoot').val(),  $('#set_merkle_root_amount').val());
                 await transaction.wait();
             } else {
                 await requestAccount();

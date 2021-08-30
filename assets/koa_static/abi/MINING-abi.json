@@ -1,5 +1,5 @@
 {
-    "abi": [
+    "abi":  [
         {
             "inputs": [
                 {
@@ -38,6 +38,12 @@
                     "internalType": "bytes32",
                     "name": "merkleRoot",
                     "type": "bytes32"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
                 },
                 {
                     "indexed": false,
@@ -205,24 +211,6 @@
                 },
                 {
                     "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "add_merkle_root",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "bytes32",
-                    "name": "merkleRoot",
-                    "type": "bytes32"
-                },
-                {
-                    "internalType": "uint256",
                     "name": "index",
                     "type": "uint256"
                 },
@@ -354,6 +342,24 @@
                 }
             ],
             "name": "set_MiningOwner",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bytes32",
+                    "name": "merkleRoot",
+                    "type": "bytes32"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "set_merkle_root",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"

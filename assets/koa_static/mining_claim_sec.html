@@ -1,0 +1,85 @@
+<article>
+    <blockquote>
+        "Mining Claim Test "
+    </blockquote>
+
+    <div>
+        <h6>input MSN-MINING token address</h6>
+        <input type="text" id="miningaddress" value="" />
+    </div>
+
+    <pre class="lineheightsm">
+        <h6>Simple call the metamask plugin</h6>
+        <button class="outline" onclick="requestAccount()" >Request Account</button>
+    </pre>
+
+
+    <pre class="lineheightsm">
+        <h6>claim_erc20</h6>
+        <input id="claim_erc20_merkleRoot" type="text" placeholder="input your claim_erc20_merkleRoot" />
+        <input id="claim_erc20_index" type="number" placeholder="input your claim_erc20_index" />
+        <input id="claim_erc20_amount" type="number" placeholder="input your claim_erc20_amount" />
+        <input id="claim_erc20_merkleProof" type="text" placeholder="input your claim_erc20_merkleProof [json string]" />
+        <button class="outline" onclick="claim_erc20()" >claim_erc20</button>
+    </pre> 
+     
+
+    
+
+</article>
+
+<script src="/js/ethers-5.2.umd.min.js" type="application/javascript"></script>
+<script src="/js/utils.js" type="application/javascript"></script>
+
+
+
+<script>
+
+    function showerror(e) {
+        if (e.hasOwnProperty('data') && e.data.hasOwnProperty('message')) {
+            alertify.error(e.data.message);
+        } else {
+            console.log(e);
+            alertify.error("something wrong");
+        }
+    }
+
+    var abi;
+    $.get("/abi/MINING-abi.json", function (result) {
+        abi = result.abi;
+    });
+
+
+    async function requestAccount() {
+        try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
+    async function claim_erc20() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
+                const transaction = await contract.claim_erc20(
+                     $('#claim_erc20_merkleRoot').val(),
+                     $('#claim_erc20_index').val(),
+                     $('#claim_erc20_amount').val(),
+                     eval($('#claim_erc20_merkleProof').val())
+                );
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+     
+   
+
+</script>
