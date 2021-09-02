@@ -21,10 +21,10 @@
         <input id="claim_erc20_amount" type="number" placeholder="input your claim_erc20_amount" />
         <input id="claim_erc20_merkleProof" type="text" placeholder="input your claim_erc20_merkleProof [array]" />
         <button class="outline" onclick="claim_erc20()" >claim_erc20</button>
-    </pre> 
-     
+    </pre>
 
-    
+
+
 
 </article>
 
@@ -36,11 +36,21 @@
 <script>
 
     function showerror(e) {
+
+        if (e.hasOwnProperty('code') && (e.code == 4001)) {
+            alertify.error("please connect to the wallet");
+            return;
+        }
+
         if (e.hasOwnProperty('data') && e.data.hasOwnProperty('message')) {
             alertify.error(e.data.message);
         } else {
-            console.log(e);
-            alertify.error("something wrong");
+            if ($('#miningaddress').val().trim() == '') {
+                alertify.error("please input miningaddress on top of the page");
+            } else {
+                console.log(e);
+                alertify.error("something wrong");
+            }
         }
     }
 
@@ -62,14 +72,15 @@
     async function claim_erc20() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
                 const transaction = await contract.claim_erc20(
-                     $('#claim_erc20_merkleRoot').val(),
-                     $('#claim_erc20_index').val(),
-                     $('#claim_erc20_amount').val(),
-                     eval($('#claim_erc20_merkleProof').val())
+                    $('#claim_erc20_merkleRoot').val(),
+                    $('#claim_erc20_index').val(),
+                    $('#claim_erc20_amount').val(),
+                    eval($('#claim_erc20_merkleProof').val())
                 );
                 await transaction.wait();
             } else {
@@ -79,7 +90,7 @@
             showerror(e);
         }
     }
-     
-   
+
+
 
 </script>

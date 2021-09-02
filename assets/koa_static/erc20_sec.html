@@ -103,7 +103,7 @@
     <button class="outline" onclick="remove_special()" > remove_special </button>
   </pre>
 
- 
+
   <pre class="lineheightsm">
     <h6>get exchange status</h6>
     <div id="get_exchange_open_result"></div>
@@ -163,11 +163,21 @@
 <script>
 
   function showerror(e) {
+
+    if (e.hasOwnProperty('code') && (e.code == 4001)) {
+      alertify.error("please connect to the wallet");
+      return;
+    }
+
     if (e.hasOwnProperty('data') && e.data.hasOwnProperty('message')) {
       alertify.error(e.data.message);
     } else {
-      console.log(e);
-      alertify.error("something wrong");
+      if ($('#erc20address').val().trim() == '') {
+        alertify.error("please input erc20address on top of the page");
+      } else {
+        console.log(e);
+        alertify.error("something wrong");
+      }
     }
   }
 
@@ -297,6 +307,7 @@
   async function mint() {
     try {
       if (typeof window.ethereum !== 'undefined') {
+        const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
@@ -318,6 +329,7 @@
   async function burn() {
     try {
       if (typeof window.ethereum !== 'undefined') {
+        const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
@@ -340,6 +352,7 @@
   async function approve() {
     try {
       if (typeof window.ethereum !== 'undefined') {
+        const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
@@ -361,6 +374,7 @@
   async function allowance() {
     try {
       if (typeof window.ethereum !== 'undefined') {
+        const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
@@ -378,6 +392,7 @@
   async function add_special() {
     try {
       if (typeof window.ethereum !== 'undefined') {
+        const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
@@ -395,6 +410,7 @@
   async function remove_special() {
     try {
       if (typeof window.ethereum !== 'undefined') {
+        const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
@@ -466,6 +482,7 @@
   async function set_exchange_open() {
     try {
       if (typeof window.ethereum !== 'undefined') {
+        const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
@@ -499,10 +516,11 @@
   async function transfer() {
     try {
       if (typeof window.ethereum !== 'undefined') {
+        const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract($('#erc20address').val(), abi, signer)
-        const transaction = await contract.transfer($('#transfer_recipient').val(),$('#transfer_amount').val());
+        const transaction = await contract.transfer($('#transfer_recipient').val(), $('#transfer_amount').val());
         await transaction.wait();
       } else {
         await requestAccount();
@@ -521,6 +539,7 @@
   async function withdraw_eth() {
     try {
       if (typeof window.ethereum !== 'undefined') {
+        const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract($('#erc20address').val(), abi, signer)

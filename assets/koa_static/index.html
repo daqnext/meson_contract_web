@@ -11,6 +11,11 @@
 </head>
 
 <body>
+
+    <div id="loadwrapper" class="loadwrapper">
+        <div class="loader" id="loader"></div>
+    </div>
+
     <div id="menu"></div>
 
     <section id="section">
@@ -25,12 +30,14 @@
 <script src="/js/jquery.json-viewer.js"></script>
 
 
- 
 
 
 <script>
     $(function () {
-        $('#menu').load("menu.html");
+        $('#loadwrapper').show();
+        $('#menu').load("menu.html",function(){
+            $('#loadwrapper').hide();
+        });
     });
 </script>
 

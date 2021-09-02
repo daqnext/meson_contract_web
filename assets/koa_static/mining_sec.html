@@ -33,8 +33,8 @@
         <button class="outline" onclick="get_msn_addr()" > get_msn_addr</button>
     </pre>
 
-   
- 
+
+
     <pre class="lineheightsm">
         <h6>get keeper</h6>
         <div id="get_keeper_result"></div>
@@ -61,6 +61,7 @@
         <h6> get merkleroot's balance</h6>
         <input id="get_merkle_balance_input" placeholder="input your merkle_root"/>
         <div id="get_merkle_balance_result"></div>
+        <div id="get_merkle_balance_result_easyread"></div>
         <button class="outline" onclick="get_merkle_balance()" > get_merkle_balance</button>
     </pre>
 
@@ -68,10 +69,11 @@
         <h6>set_merkle_root</h6>
         <input id="set_merkle_root_merkleRoot"   type="text"  placeholder="merkleRoot"/>
         <input id="set_merkle_root_amount" type="number" placeholder="amount"/>
+        <div   id="set_merkle_root_amount_easyread"></div>
         <button class="outline" onclick="set_merkle_root()" > set_merkle_root</button>
     </pre>
 
-     
+
 
 </article>
 
@@ -83,11 +85,26 @@
 <script>
 
     function showerror(e) {
+
+        if (e.hasOwnProperty('code') && (e.code == 4001)) {
+            alertify.error("please connect to the wallet");
+            return;
+        }
+
+        if (e.hasOwnProperty('code') && (e.code == 4001)) {
+            alertify.error("please connect to the wallet");
+            return;
+        }
+
         if (e.hasOwnProperty('data') && e.data.hasOwnProperty('message')) {
             alertify.error(e.data.message);
         } else {
-            console.log(e);
-            alertify.error("something wrong");
+            if ($('#miningaddress').val().trim() == '') {
+                alertify.error("please input miningaddress on top of the page");
+            } else {
+                console.log(e);
+                alertify.error("something wrong");
+            }
         }
     }
 
@@ -140,17 +157,21 @@
     }
 
 
-     
- 
+
+
 
     async function get_merkle_balance() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
                 const get_merkle_balance_result = await contract.get_merkle_balance($('#get_merkle_balance_input').val());
+
                 $("#get_merkle_balance_result").html(get_merkle_balance_result.toString());
+                $("#get_merkle_balance_result_easyread").html(easyread(get_merkle_balance_result.toString()).output);
+
             } else {
                 await requestAccount();
             }
@@ -162,11 +183,12 @@
     async function set_merkle_root() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
                 const transaction = await contract.set_merkle_root(
-                    $('#set_merkle_root_merkleRoot').val(),  $('#set_merkle_root_amount').val());
+                    $('#set_merkle_root_merkleRoot').val(), $('#set_merkle_root_amount').val());
                 await transaction.wait();
             } else {
                 await requestAccount();
@@ -175,12 +197,13 @@
             showerror(e);
         }
     }
-    
+
 
 
     async function set_MiningOwner() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
@@ -218,6 +241,7 @@
     async function add_keeper() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
@@ -235,6 +259,7 @@
     async function remove_keeper() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#miningaddress').val(), abi, signer)
@@ -247,6 +272,14 @@
             showerror(e);
         }
     }
+
+
+    $('#set_merkle_root_amount').keyup(function () {
+        $('#set_merkle_root_amount_easyread').html('');
+        $("#set_merkle_root_amount_easyread").html(easyread($('#set_merkle_root_amount').val()).output);
+    });
+
+
 
 
 </script>

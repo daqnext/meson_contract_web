@@ -148,6 +148,15 @@
         <button class="outline" onclick="set_voter_hold_secs()" >set_voter_hold_secs</button>
     </pre>
 
+    <pre class="lineheightsm">
+        <h6>vote</h6>
+        <input id='vote_pid_input' />
+        <input id='vote_option_input' />
+        <button class="outline" onclick="vote()" >vote</button>
+    </pre>
+
+
+
 
     <pre class="lineheightsm">
         <h6>withdraw_contract</h6>
@@ -159,7 +168,7 @@
         <h6>withdraw_eth</h6>
         <button class="outline" onclick="withdraw_eth()" > withdraw_eth </button>
     </pre>
- 
+
 
 </article>
 
@@ -172,11 +181,23 @@
 <script>
 
     function showerror(e) {
+
+        if (e.hasOwnProperty('code') && (e.code == 4001)) {
+            alertify.error("please connect to the wallet");
+            return;
+        }
+
         if (e.hasOwnProperty('data') && e.data.hasOwnProperty('message')) {
             alertify.error(e.data.message);
         } else {
-            console.log(e);
-            alertify.error("something wrong");
+
+            if ($('#daoaddress').val().trim() == '') {
+                alertify.error("please input daoaddress on top of the page");
+            } else {
+                console.log(e);
+                alertify.error("something wrong");
+            }
+
         }
     }
 
@@ -216,6 +237,7 @@
     async function change_DAOOwner() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -232,6 +254,7 @@
     async function set_deposit() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -286,6 +309,7 @@
     async function deposit_all() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -302,6 +326,7 @@
     async function voter_withdraw_all() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -337,6 +362,7 @@
     async function add_keeper() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -354,6 +380,7 @@
     async function remove_keeper() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -390,6 +417,7 @@
     async function set_ProposalFolderUrl() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -432,6 +460,7 @@
     async function get_proposal() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+
                 //clean first
                 $('#get_proposal_result_pid').html('');
                 $('#get_proposal_result_creator').html('');
@@ -473,6 +502,7 @@
     async function set_proposal() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -507,6 +537,7 @@
     async function remove_proposal() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -542,6 +573,7 @@
     async function set_voter_hold_secs() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -556,9 +588,28 @@
     }
 
 
+    async function vote() {
+        try {
+            if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
+                const transaction = await contract.vote($('#vote_pid_input').val(), $('#vote_option_input').val());
+                await transaction.wait();
+            } else {
+                await requestAccount();
+            }
+        } catch (e) {
+            showerror(e);
+        }
+    }
+
+
     async function withdraw_contract() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
@@ -576,6 +627,7 @@
     async function withdraw_eth() {
         try {
             if (typeof window.ethereum !== 'undefined') {
+                const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract($('#daoaddress').val(), abi, signer)
