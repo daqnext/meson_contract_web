@@ -7,6 +7,6 @@
 
 ### run command below and http server will start on port 8082
 ```
-npm run prod
+npm run dev
 ```
 
